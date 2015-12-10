@@ -2,7 +2,7 @@
 #
 #  Author: Amina Echchiki [mailto:amina.echchiki@unil.ch]
 #  Affiliation: MSc student, MLS bioinformatics, University of Lausanne
-#  Date: 2015-11-20 
+#  Date: 2015-12-10
 #  Name: SNP_analysis-count-clusters.R
 #  Purpose: Analyze SNP counts extracted by Nu6_SNP-analysis.sh and Rhiir2_SNP-analysis.sh, and clusterize isolates using SNP count as distance
 #  Comments: Requires files of mono/poly SNP count (run SNP_count-data_download-script.sh)
