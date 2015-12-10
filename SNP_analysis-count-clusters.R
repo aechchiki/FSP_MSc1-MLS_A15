@@ -232,4 +232,4 @@ max(globalRhiir2_SNPdensity_genome); isonames$isolate[which.max(globalRhiir2_SNP
 #k-means on global
 fit_globalRhiir2 <- kmeans(globalRhiir2_SNPcount, 6)
 rownames(globalRhiir2_SNPcount)=isonames$isolate
-clusplot(globalRhiir2_SNPcount, fit_globalRhiir2$cluster,  color=TRUE,  labels=3, lines=0, main="Isolate clustering using Rhiir2 SNP count")
+clusplot(globalRhiir2_SNPcount, fit_globalRhiir2$cluster, color=TRUE,  labels=3, lines=0, main="Isolate clustering using Rhiir2 SNP count")
