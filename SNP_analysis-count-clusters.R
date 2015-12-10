@@ -39,6 +39,7 @@ polyNu6=read.table("isolateNu6_polyRS-sort", h=T) #read Nu6 polySNPs file
 ## SNP count processing
 #mono
 monoNu6_SNPcount=monoNu6[2:5] #retrieve monoSNP count
+isonames=monoNu6[1]; isonames #retrieve isolates order
 #poly
 polyNu6_SNPcount=polyNu6[2:5] #retrieve polySNP count
 #global
@@ -46,7 +47,6 @@ globalNu6_SNPcount=monoNu6_SNPcount+polyNu6_SNPcount #retrieve globalSNP count
 globalNu6=data.frame(isonames, globalNu6_SNPcount) #add isolates names
 write.table(globalNu6, "globalNu6") #write to file: import for final report 
 #isolates_list
-isonames=monoNu6[1]; isonames #retrieve isolates order
 rownames(isonames)=isonames$isolate
 
 
@@ -120,18 +120,6 @@ max(globalNu6_SNPdensity_genome); isonames$isolate[which.max(globalNu6_SNPdensit
 
 
 ## SNP clusters
-#mono
-distance_monoNu6=dist(monoNu6_SNPcount, method="euclidean")
-cluster_monoNu6=hclust(distance_monoNu6, method="average")
-par(mfrow=c(1,1)); plot(cluster_monoNu6, hang=1, label=monoNu6$isolates , main="Isolate clustering using Nu6 SNP count")
-#poly
-distance_polyNu6=dist(polyNu6_SNPcount, method="euclidean")
-cluster_polyNu6=hclust(distance_polyNu6, method="average")
-par(mfrow=c(1,1)); plot(cluster_polyNu6, hang=1, label=polyNu6$isolates , main="Isolate clustering using Nu6 SNP count")
-#global
-distance_globalNu6=dist(globalNu6_SNPcount, method="euclidean")
-cluster_globalNu6=hclust(distance_globalNu6, method="average")
-par(mfrow=c(1,1)); plot(cluster_globalNu6, hang=1, label=globalNu6$isolates , main="Isolate clustering using Nu6 SNP count")
 #k-means on global
 fit_globalNu6 <- kmeans(globalNu6_SNPcount, 6)
 rownames(globalNu6_SNPcount)=isonames$isolate
@@ -204,7 +192,7 @@ barchart(data_globalRhiir2, scales=list(y=list(labels=globalRhiir2$isolate)), au
 
 
 ## SNP density processing
-Rhiir2_len=115079203; Rhiir2_len_kb=Rhiir2_len/1000 #Rhiir2 length
+Rhiir2_len=136807476; Rhiir2_len_kb=Rhiir2_len/1000 #Rhiir2 length
 # mono
 monoRhiir2_SNPdensity_region=monoRhiir2_SNPcount/Rhiir2_len_kb #Rhiir2 SNP density per genome region
 monoRhiir2_SNPdensity_genome=rowSums(monoRhiir2_SNPdensity_region) #Rhiir2 SNP density genomewide
@@ -241,19 +229,7 @@ max(globalRhiir2_SNPdensity_genome); isonames$isolate[which.max(globalRhiir2_SNP
 
 
 ## SNP clusters
-#mono
-distance_monoRhiir2=dist(monoRhiir2_SNPcount, method="euclidean")
-cluster_monoRhiir2=hclust(distance_monoRhiir2, method="average")
-par(mfrow=c(1,1)); plot(cluster_monoRhiir2, hang=1, label=monoRhiir2$isolates , main="Isolate clustering using Rhiir2 SNP count")
-#poly
-distance_polyRhiir2=dist(polyRhiir2_SNPcount, method="euclidean")
-cluster_polyRhiir2=hclust(distance_polyRhiir2, method="average")
-par(mfrow=c(1,1)); plot(cluster_polyRhiir2, hang=1, label=polyRhiir2$isolates , main="Isolate clustering using Rhiir2 SNP count")
-#global
-distance_globalRhiir2=dist(globalRhiir2_SNPcount, method="euclidean")
-cluster_globalRhiir2=hclust(distance_globalRhiir2, method="average")
-par(mfrow=c(1,1)); plot(cluster_globalRhiir2, hang=1, label=globalRhiir2$isolates , main="Isolate clustering using Rhiir2 SNP count")
 #k-means on global
-fit_globalRhiir2 <- kmeans(globalRhiir2_SNPcount, 5)
+fit_globalRhiir2 <- kmeans(globalRhiir2_SNPcount, 6)
 rownames(globalRhiir2_SNPcount)=isonames$isolate
 clusplot(globalRhiir2_SNPcount, fit_globalRhiir2$cluster,  color=TRUE,  labels=3, lines=0, main="Isolate clustering using Rhiir2 SNP count")
