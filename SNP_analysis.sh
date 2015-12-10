@@ -5,7 +5,7 @@
 #
 #  Author: Amina Echchiki [mailto:amina.echchiki@unil.ch]
 #  Affiliation: MSc student, MLS bioinformatics, University of Lausanne
-#  Date: 2015-11-20 
+#  Date: 2015-12-10
 #  Name: SNP-analysis.sh
 #  Purpose: Analyse mono- and poly-allelic SNPs in R.irregularis isolates using Nu6 and Rhiir2 as reference genome
 #  Comments: requires *.subVCF files of each isolate; requires pwd free-space of aprox. 5GB
