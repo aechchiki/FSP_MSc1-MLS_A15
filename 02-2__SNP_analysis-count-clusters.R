@@ -30,6 +30,10 @@ setwd(wdir)
 library(lattice) #graphical package  
 library(cluster) #clustering package 
 
+## define genome length
+Nu6_len=115079203; Nu6_len_kb=Nu6_len/1000 #Nu6 length
+Rhiir2_len=136807476; Rhiir2_len_kb=Rhiir2_len/1000 #Rhiir2 length
+
 
 ## import files 
 monoNu6=read.table("isolateNu6_monoRS-sort", h=T) #read Nu6 monoSNPs file
@@ -39,7 +43,7 @@ polyNu6=read.table("isolateNu6_polyRS-sort", h=T) #read Nu6 polySNPs file
 ## SNP count processing
 #mono
 monoNu6_SNPcount=monoNu6[2:5] #retrieve monoSNP count
-isonames=monoNu6[1]; isonames #retrieve isolates order
+isonames=monoNu6[1] #retrieve isolates order
 #poly
 polyNu6_SNPcount=polyNu6[2:5] #retrieve polySNP count
 #global
@@ -65,16 +69,42 @@ min(polyNu6_genome[-which.min(polyNu6_genome)]); isonames$isolate[which.min(poly
 max(polyNu6_genome); isonames$isolate[which.max(polyNu6_genome)] #maximal polySNP count
 #global
 globalNu6_genome=rowSums(globalNu6_SNPcount)
+mean(globalNu6_genome); sd(globalNu6_genome)
+mean(globalNu6_genome)/Nu6_len_kb; sd(globalNu6_genome/Nu6_len_kb)
 min(globalNu6_genome); isonames$isolate[which.min(globalNu6_genome)] #minimal globalSNP count
+#report
+#min(globalNu6_genome)/Nu6_len_kb
 min(globalNu6_genome[-which.min(globalNu6_genome)]); isonames$isolate[which.min(globalNu6_genome[-which.min(globalNu6_genome)])] #minimal globalSNP count except DAOM
+#report
+#min(globalNu6_genome[-which.min(globalNu6_genome)])/Nu6_len_kb
 max(globalNu6_genome); isonames$isolate[which.max(globalNu6_genome)] #maximal globalSNP count
+#report
+#max(globalNu6_genome)/Nu6_len_kb
+# SNP frequency
+globalNu6_SNPfreq=globalNu6_SNPcount/globalNu6_genome
+globalNu6_SNPfreq_noDAOM=globalNu6_SNPfreq[-18,]
+max(as.matrix(globalNu6_SNPfreq))
+min(as.matrix(globalNu6_SNPfreq))
+min(as.matrix(globalNu6_SNPfreq_noDAOM))
+max(as.matrix(globalNu6_SNPfreq_noDAOM))
+# 
+mean(monoNu6_genome/globalNu6_genome); sd(monoNu6_genome/globalNu6_genome)
+mean(monoNu6_genome)/Nu6_len_kb; sd(monoNu6_genome/Nu6_len_kb)
+mean(polyNu6_genome)/Nu6_len_kb; sd(polyNu6_genome/Nu6_len_kb)
+# correlation 
+poly_N_dens=polyNu6_genome/Nu6_len_kb; mono_N_dens=monoNu6_genome/Nu6_len_kb
+dfN=data.frame(mono_N_dens, poly_N_dens); rownames(dfN)=isonames$isolate
+cor.test(mono_N_dens, poly_N_dens)
+plot(poly_N_dens~mono_N_dens , main="SNP density: monoallelic vs polyallelic SNPs (Nu6 reference)", xlab="Monoallelic SNPs density", ylab="Polyallelic SNPs density")
+mtext("cor=0.53, p.value=0.002")
+with(dfN, text(poly_N_dens~mono_N_dens, labels=rownames(dfN), pos=4, cex=0.8))
 
 
 ## SNP count graphics
 par(mfrow=c(1,3))
 boxplot(monoNu6_SNPcount, ylim=c(0, 4000), main="monoSNP count against N6 reference"); boxplot(polyNu6_SNPcount, ylim=c(0, 4000),  main="polySNP count against N6 reference"); boxplot(globalNu6_SNPcount, ylim=c(0, 4000),  main="SNP count against N6 reference")
-data_monoNu6=prop.table(as.matrix(monoNu6_SNPcount), 1) 
 par(mfrow=c(1,1))
+data_monoNu6=prop.table(as.matrix(monoNu6_SNPcount), 1) 
 barchart(data_monoNu6, scales=list(y=list(labels=monoNu6$isolate)), auto.key=list(space='right'), ylab="Isolates", main="Distribution of monoSNPs in Nu6", axes=FALSE)
 data_polyNu6=prop.table(as.matrix(polyNu6_SNPcount), 1) 
 barchart(data_polyNu6, scales=list(y=list(labels=polyNu6$isolate)), auto.key=list(space='right'), ylab="Isolates", main="Distribution of polySNPs in Nu6", axes=FALSE)
@@ -83,7 +113,6 @@ barchart(data_globalNu6, scales=list(y=list(labels=globalNu6$isolate)), auto.key
 
 
 ## SNP density processing
-Nu6_len=115079203; Nu6_len_kb=Nu6_len/1000 #Nu6 length
 # mono
 monoNu6_SNPdensity_region=monoNu6_SNPcount/Nu6_len_kb #Nu6 SNP density per genome region
 monoNu6_SNPdensity_genome=rowSums(monoNu6_SNPdensity_region) #Nu6 SNP density genomewide
@@ -131,13 +160,6 @@ clusplot(globalNu6_SNPcount, fit_globalNu6$cluster,  color=TRUE,  labels=3, line
 #
 
 
-## prepare working directory 
-wdir="/home/dovah/Documents/MSc/MSc-A15/FSP/09-12_NEW-SCRIPTS/0R_analysis/" # change string to own dwd directory
-setwd(wdir)
-library(lattice) #graphical package  
-library(cluster) #clustering package 
-
-
 ## import files 
 monoRhiir2=read.table("isolateRhiir2_monoRS-sort", h=T) #read Rhiir2 monoSNPs file
 polyRhiir2=read.table("isolateRhiir2_polyRS-sort", h=T) #read Rhiir2 polySNPs file 
@@ -172,12 +194,34 @@ min(polyRhiir2_genome[-which.min(polyRhiir2_genome)]); isonames$isolate[which.mi
 max(polyRhiir2_genome); isonames$isolate[which.max(polyRhiir2_genome)] #maximal polySNP count
 #global
 globalRhiir2_genome=rowSums(globalRhiir2_SNPcount)
+mean(globalRhiir2_genome); sd(globalRhiir2_genome)
+#report
+#mean(globalRhiir2_genome)/Rhiir2_len_kb; sd(globalRhiir2_genome/Rhiir2_len_kb)
 min(globalRhiir2_genome); isonames$isolate[which.min(globalRhiir2_genome)] #minimal globalSNP count
+min(globalRhiir2_genome)/Rhiir2_len_kb
 min(globalRhiir2_genome[-which.min(globalRhiir2_genome)]); isonames$isolate[which.min(globalRhiir2_genome[-which.min(globalRhiir2_genome)])] #minimal globalSNP count except DAOM
+min(globalRhiir2_genome[-which.min(globalRhiir2_genome)])/Rhiir2_len_kb
 max(globalRhiir2_genome); isonames$isolate[which.max(globalRhiir2_genome)] #maximal globalSNP count
-
-barchart(data_monoNu6, scales=list(y=list(labels=monoNu6$isolate)), auto.key=list(space='right'), ylab="Isolates", main="Distribution of monoSNPs in Nu6", axes=FALSE)
-
+max(globalRhiir2_genome)/Rhiir2_len_kb
+# SNP frequency 
+mean(globalRhiir2_genome); sd(globalRhiir2_genome)
+globalRhiir2_SNPfreq=globalRhiir2_SNPcount/globalRhiir2_genome
+globalRhiir2_SNPfreq_noDAOM=globalRhiir2_SNPfreq[-18,]
+max(as.matrix(globalRhiir2_SNPfreq))
+min(as.matrix(globalRhiir2_SNPfreq))
+min(as.matrix(globalRhiir2_SNPfreq_noDAOM))
+max(as.matrix(globalRhiir2_SNPfreq_noDAOM))
+# % of monoallelic SNPs
+mean(monoRhiir2_genome/globalRhiir2_genome); sd(monoRhiir2_genome/globalRhiir2_genome)
+mean(monoRhiir2_genome)/Rhiir2_len_kb; sd(monoRhiir2_genome/Rhiir2_len_kb)
+mean(polyRhiir2_genome)/Rhiir2_len_kb; sd(polyRhiir2_genome/Rhiir2_len_kb)
+#correlation 
+poly_R_dens=polyRhiir2_genome/Rhiir2_len_kb; mono_R_dens=monoRhiir2_genome/Rhiir2_len_kb
+dfR=data.frame(mono_R_dens, poly_R_dens); rownames(dfR)=isonames$isolate
+cor.test(mono_R_dens, poly_R_dens)
+plot(poly_R_dens~mono_R_dens , main="SNP density: monoallelic vs polyallelic SNPs (Rhiir2 reference)", xlab="Monoallelic SNPs density", ylab="Polyallelic SNPs density")
+mtext("cor=0.74, p.value<0.001")
+with(dfR, text(poly_R_dens~mono_R_dens, labels=rownames(dfR), pos=4, cex=0.8))
 
 ## SNP count graphics
 par(mfrow=c(1,3))
@@ -192,7 +236,6 @@ barchart(data_globalRhiir2, scales=list(y=list(labels=globalRhiir2$isolate)), au
 
 
 ## SNP density processing
-Rhiir2_len=136807476; Rhiir2_len_kb=Rhiir2_len/1000 #Rhiir2 length
 # mono
 monoRhiir2_SNPdensity_region=monoRhiir2_SNPcount/Rhiir2_len_kb #Rhiir2 SNP density per genome region
 monoRhiir2_SNPdensity_genome=rowSums(monoRhiir2_SNPdensity_region) #Rhiir2 SNP density genomewide
