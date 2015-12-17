@@ -26,13 +26,8 @@ cd ./Nu6_analysis
 # unzip Nu6_subVCF-files.zip
 
 wget https://copy.com/CwpIrl9rA4gzC9vx
-echo "Nu6 DATA DOWNLOADED"
 mv CwpIrl9rA4gzC9vx CwpIrl9rA4gzC9vx.zip
 unzip CwpIrl9rA4gzC9vx.zip
-echo "Nu6 DATA UNZIPPED!"
-
-
-
 
 #
 # step 1.1: prepare N6 subVCF for SNP analysis 
@@ -273,10 +268,8 @@ cd ./Rhiir2_analysis
 # unzip Rhiir2_subVCF-files.zip
 
 wget https://copy.com/Pc4b9J3AgpPC7E7S
-echo "Rhiir2 DATA DOWNLOADED"
 mv Pc4b9J3AgpPC7E7S Pc4b9J3AgpPC7E7S.zip
 unzip Pc4b9J3AgpPC7E7S.zip
-echo "Rhiir2 DATA UNZIPPED!"
 
 
 #
